@@ -1,0 +1,122 @@
+= codeprimate-generator
+
+http://github.com/codeprimate/codeprimate-generator
+
+== DESCRIPTION:
+
+GenericGenerator is a Ruby/Rails data generator intended for creating large amounts of test
+data as flexibly as possible, in the shortest amount of time.  If you want a simple data
+generator that actually uses ActiveRecord and your model hooks, please look elsewhere, 
+Thoughtbot's FactoryGirl gem would be an excellent option (and one I personally use). 
+
+== FEATURES/PROBLEMS:
+
+Simplifies the creation of a data generator class by exposing a simple DSL
+for describing model fields, model relationships, optional fixture data sources,
+caching data, and generating data using Faker.
+
+== SYNOPSIS:
+
+   class FooGenerator < Codeprimate::GenericGenerator
+       # Required.  Specify the Class
+       set_model Foo
+ 
+       # Required.  Specify all fields in class to be assigned
+       has_fields :foo1, :foo2, :foo3, :user_id
+ 
+       # Optional. For every Foo, generate (5) dependent Foobars using
+       #  the FoobarGenerator GenericGenerator model
+       #
+       has_many :foobars, :generator => FoobarGenerator, :count => 5
+ 
+       # Optional. For every Foo, generate (10) dependent Bazz's which are polymorphic
+       #
+       # has_many :bazzes, :as => :bazzable, :generator => BazzGenerator,
+       #          :count => 5
+ 
+       # Optional. For every Foo, generate (10) dependent Bazz's which are polymorphic.
+       #  using the specified fixture (this will override the fixture declaration
+       #  of the generator if already specified.
+       #
+       has_many :bazzes, :as => :bazzable, :generator => BazzGenerator, 
+                 :count => 10, :fixture => "config/test_data/foo_bazzes.yml"
+ 
+       # Optional. Cache data for use inside generator, using the key ":user_id".
+       #  You can call cache_data several times, using different keys.
+       cache_data(:user_ids) do
+           User.find(:all).collect{|u| u.id}
+       end
+ 
+           
+       # Required.  The generator block must return a Hash.
+       #  The local variable 'defaults' allows you to access the defaults Hash
+       #  as provided when generate!() is called.  Use your imagination.
+       generator do |defaults|
+           {
+               :foo1 => Faker::Lorem::words(3).join(' '),
+               :foo2 => rand(1000),
+               :foo3 => rand(1000),
+ 
+               # Get a random user_id from the cached data.
+               :user_id => get_random(:user_id)
+           }
+       end
+ 
+       # Optional.
+       before do
+           # Do whatever before running the generator
+       end
+ 
+       # Optional.
+       after do
+           # Do whatever after running the generator
+       end
+   end
+ 
+   class FoobarGenerator < GenericGenerator
+       set_model Foobar
+       has_fields :bar1, :bar2, :bar3, :user_id
+ 
+       fixture "test/fixtures/foobars.yml
+ 
+       generator do |defaults|
+           # Just get a random entry from the fixtures
+           get_random(:fixture)
+       end
+   end
+
+== USAGE:
+
+	FooGenerator.generate!(100) => Makes 100 Foo's (and 10 bazzes)
+	FooGenerator.generate!(50, {:user_id => 5}) => Makes 50 Foo's with user_id of 5
+
+== REQUIREMENTS:
+
+*  Faker and AR-Extensions gems must be installed
+
+== INSTALL:
+
+* sudo gem install codeprimate-generator
+
+== LICENSE:
+
+Copyright (c) 2009 Patrick Morgan and Master Web Design, released under the MIT license
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
