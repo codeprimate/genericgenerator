@@ -1,11 +1,1 @@
-History.txt
-Manifest.txt
-PostInstall.txt
-README.rdoc
-Rakefile
-lib/codeprimate-generator.rb
-script/console
-script/destroy
-script/generate
-test/test_codeprimate-generator.rb
-test/test_helper.rb
+["Rakefile" , "PostInstall.txt" , "README.rdoc" , "genericgenerator.gemspec" , "History.txt" , "manifest.txt" , "lib" , "lib/genericgenerator.rb" , "test" , "script" , "script/destroy" , "script/generate" , "script/console" ]

@@ -1,6 +1,6 @@
 = codeprimate-generator
 
-http://github.com/codeprimate/codeprimate-generator
+http://github.com/codeprimate/genericgenerator
 
 == DESCRIPTION:
 
