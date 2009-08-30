@@ -1,1 +1,0 @@
-["Rakefile" , "PostInstall.txt" , "README.rdoc" , "genericgenerator.gemspec" , "History.txt" , "manifest.txt" , "lib" , "lib/genericgenerator.rb" , "test" , "script" , "script/destroy" , "script/generate" , "script/console" ]
